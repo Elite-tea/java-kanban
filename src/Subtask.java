@@ -1,8 +1,8 @@
 public class Subtask extends Task {
-   int idEpic; // Id главной задачи, возможно еще и пригодится для реализации проверки принадлежности к главному эпику.
+   protected int idEpic; // Id главной задачи, возможно еще и пригодится для реализации проверки принадлежности к главному эпику.
 
-   public Subtask(String name, String detail,String status, int idEpic) {
-      super(name, detail,status);
+   public Subtask(String name, String detail,int idEpic, int id) {
+      super(name, detail, id);
       this.idEpic = idEpic;
    }
 
