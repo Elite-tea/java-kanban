@@ -1,41 +1,54 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Manager {
-    protected static int id = 1; // счетчик задач всего.
-    static HashMap<Integer, Task> tasks = new HashMap<>();
-    static HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    static HashMap<Integer, Epic> epic = new HashMap<>();
+enum Status{
 
-    public static HashMap getAllTasks(String type) { // Получение всех задач
+    NEW,
+    IN_PROGRESS,
+    DONE
+}
+enum TypeTask{
+
+    TASK,
+    EPIC,
+    SUBTASK
+}
+
+class Manager {
+    protected  int id = 0; // счетчик задач всего.
+    protected  HashMap<Integer, Task> tasks = new HashMap<>();
+    protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected HashMap<Integer, Epic> epic = new HashMap<>();
+
+    public ArrayList getAllTasks(TypeTask type) { // Получение всех задач
         switch (type) {
-            case "task":
-                HashMap<Integer,Task> taskList = new HashMap<>();
+            case TASK:
+                ArrayList<Task> taskList = new ArrayList<>();
                 for (Integer i : tasks.keySet()) { // Получаем задачи типа task
-                    taskList.put(i, tasks.get(i));
+                    taskList.add(tasks.get(i));
 
                 }
                 return taskList;
 
-            case "epic":
-                HashMap<Integer,Epic> epicList = new HashMap<>();
+            case EPIC:
+                ArrayList<Epic> epicList = new ArrayList<>();
                 for (Integer i : epic.keySet()) { // Получаем задачи типа epic
-                    epicList.put(i, epic.get(i));
+                    epicList.add(epic.get(i));
                 }
                 return epicList;
 
-            case "subtask":
-                HashMap<Integer,Subtask> subtaskList = new HashMap<>();
+            case SUBTASK:
+                ArrayList<Subtask> subtaskList = new ArrayList<>();
                 for (Integer i : subtasks.keySet()) { // Получаем задачи типа subtask
-                    subtaskList.put(i, subtasks.get(i));
+                    subtaskList.add(subtasks.get(i));
                 }
                 return subtaskList;
             default:
-                return new HashMap<>();
+                return new ArrayList<>();
         }
     }
 
-    public static boolean revoteAllTask(int type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
+    public boolean revoteAllTask(int type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
         switch (type) {
             case 1:
                 tasks.clear();
@@ -52,39 +65,44 @@ public class Manager {
         }
     }
 
-    public static Task getByIdTask(Integer id) { // Получить задачу по идентификатору
+    public Task getByIdTask(Integer id) { // Получить задачу по идентификатору
 
         return tasks.get(id);
     }
-    public static Subtask getByIdSubTask(Integer id) { // Получить субзадачу  по идентификатору
+    public Subtask getByIdSubTask(Integer id) { // Получить субзадачу  по идентификатору
 
         return subtasks.get(id);
     }
-    public static Epic getByIdEpic(Integer id) { // Получить эпик по идентификатору
+    public Epic getByIdEpic(Integer id) { // Получить эпик по идентификатору
 
         return epic.get(id);
     }
 
 
-    public static boolean createTask(Task newTask ) { // Создаем задачу типа Task
+    public boolean createTask(Task newTask ) { // Создаем задачу типа Task
+        id++; // Теперь хранится последний использованный id а не свободный. Была идея инкрементировать id в параметре,
+        newTask.setStatus(Status.NEW);                                                               // но это плохой тон, как сказал мой наставник)
         tasks.put(id, newTask);
-        id++;
-            return true;
+        return true;
         }
 
-    public static boolean createEpic(Epic newEpic) { // Создаем задачу типа Epic
+    public boolean createEpic(Epic newEpic) { // Создаем задачу типа Epic
+        id++;
+        newEpic.setStatus(Status.NEW);
         epic.put(id, newEpic);
-        id++;
+
+
             return true;
     }
 
-    public static boolean createSubTask(Subtask subtask) { // Создаем задачу типа SubTask
+    public boolean createSubTask(Subtask subtask) { // Создаем задачу типа SubTask
+        id++;
+        subtask.setStatus(Status.NEW);
         subtasks.put(id, subtask);
-        id++;
             return true;
     }
 
-    public static boolean updateTask(Integer id, Task task) { // Обновление задачи типа Task по id
+    public boolean updateTask(Integer id, Task task) { // Обновление задачи типа Task по id
             if (tasks.get(id) == null || tasks.get(id).id == 0) { /* Проверка на существование.
                                                                         Если задачи не существует, вернем false. */
                 return false;
@@ -94,7 +112,7 @@ public class Manager {
             }
     }
 
-    public static boolean updateEpic(Integer id, Epic dataEpic) { // Обновление задачи типа Epic по идентификатору
+    public boolean updateEpic(Integer id, Epic dataEpic) { // Обновление задачи типа Epic по идентификатору
         if (epic.get(id).id == 0 || epic.get(id) == null) { /* Проверка на существование.
                                                                         Если задачи не существует, вернем false. */
             return false;
@@ -104,7 +122,7 @@ public class Manager {
         }
     }
 
-    public static boolean updateSubTask(Integer id, Subtask subtask) { // Обновление задачи типа SubTask по id
+    public boolean updateSubTask(Integer id, Subtask subtask) { // Обновление задачи типа SubTask по id
         if (subtasks.get(id) == null || subtasks.get(id).id == 0) { /* Проверка на существование.
                                                                         Если задачи не существует, вернем false. */
             return false;
@@ -122,13 +140,23 @@ public class Manager {
             for (Integer integer : idTheSubEpic) { // Идем по всем субзадачам и проверяем их статус,
 
                 if (subtasks.get(integer) != null) {
+                    int done = 0;
+                    int progress = 0;
 
-                    if (dataEpic.getStatus().equals("Done")) {
-                        epic.get(idEpicSubTasks).setStatus("Done");
+                    if (dataEpic.getStatus().equals(Status.DONE.toString())){
+                        done++;
                     }
 
-                    if (dataEpic.getStatus().equals("IN_PROGRESS")) {
-                        epic.get(idEpicSubTasks).setStatus("N_PROGRESS");
+                    if (dataEpic.getStatus().equals(Status.IN_PROGRESS.toString())) {
+                        progress++;
+                    }
+
+                    if (done > 0) {
+                        epic.get(idEpicSubTasks).setStatus(Status.DONE);
+                    }
+
+                    else if (progress > 0) {
+                        epic.get(idEpicSubTasks).setStatus(Status.IN_PROGRESS);
                     }
                 } else {
                     return false;
@@ -139,7 +167,7 @@ public class Manager {
     }
 
 
-    public static boolean removeTaskId(Integer id, String type) { // Удаляем по идентификатору
+    public  boolean removeTaskId(Integer id, String type) { // Удаляем по идентификатору
         if (tasks.get(id) == null && epic.get(id) == null && subtasks.get(id) == null) { // Проверяем на существование
             return false;
         } else {
@@ -161,11 +189,11 @@ public class Manager {
         }
     }
 
-    public static String getListSubtaskEpic(Integer id) { // Получение списка всех подзадач определённого эпика.
+    public ArrayList getListSubtaskEpic(Integer id) { // Получение списка всех подзадач определённого эпика.
         Epic dataList = epic.get(id); // Лист для хранения данных конкретного эпика
         ArrayList<Integer> data; // Лист для хранения списка id субзадач конкретного эпика.
         if (epic.get(id) == null) {
-            return "Error, id not found";
+            return new ArrayList<>(); // Возвращаем пустой лист при ошибке.
         } else {
                 data = dataList.idSubtasks; // Достаем данные id для эпика
 
@@ -174,9 +202,9 @@ public class Manager {
                 for (Integer datum : data) {
                     taskList.add(subtasks.get(datum)); // Возвращаем данные каждой подзадачи
                 }
-                return taskList.toString(); // Сообщаем о выполненой задаче(Список подзадач передан)
+                return taskList; // Сообщаем о выполненой задаче(Список подзадач передан)
             } else {
-                return "Error, the list is empty"; // Возвращаем сообщение об ошибке.
+                return new ArrayList<>(); // Возвращаем пустой лист при ошибке.
             }
 
         }

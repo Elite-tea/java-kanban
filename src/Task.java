@@ -2,8 +2,8 @@ public class Task {
     protected String name; // Название, кратко описывающее суть задачи
     protected int id; // Айди задачи.
     protected String detail; // Описание, в котором раскрываются детали.
-    protected String status = "New"; /*Статус, отображающий её прогресс.
-    Мы будем выделять следующие этапы жизни задачи(New, IN_PROGRESS, DONE)*/
+    protected Status status; /*Статус, отображающий её прогресс.
+    Мы будем выделять следующие этапы жизни задачи(NEW, IN_PROGRESS, DONE)*/
 
     public Task(String name, String detail, int id) {
         this.name = name;
@@ -11,13 +11,13 @@ public class Task {
         this.id = id;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
 
         return status;
     }
 
-    public void setStatus(String newstatus) {
-        newstatus = status;
+    public void setStatus(Status newstatus) {
+        status = newstatus;
     }
 
     @Override
