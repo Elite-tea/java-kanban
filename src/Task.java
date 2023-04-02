@@ -15,6 +15,9 @@ public class Task {
 
         return status;
     }
+    public void setId(int newId) {
+    id = newId;
+    }
 
     public void setStatus(Status newstatus) {
         status = newstatus;

@@ -1,18 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-enum Status{
 
-    NEW,
-    IN_PROGRESS,
-    DONE
-}
-enum TypeTask{
-
-    TASK,
-    EPIC,
-    SUBTASK
-}
 
 class Manager {
     protected  int id = 0; // счетчик задач всего.
@@ -81,7 +70,9 @@ class Manager {
 
     public boolean createTask(Task newTask ) { // Создаем задачу типа Task
         id++; // Теперь хранится последний использованный id а не свободный. Была идея инкрементировать id в параметре,
-        newTask.setStatus(Status.NEW);                                                               // но это плохой тон, как сказал мой наставник)
+                                                                         // но это плохой тон, как сказал мой наставник)
+        newTask.setStatus(Status.NEW);
+        newTask.setId(id);
         tasks.put(id, newTask);
         return true;
         }
@@ -89,6 +80,7 @@ class Manager {
     public boolean createEpic(Epic newEpic) { // Создаем задачу типа Epic
         id++;
         newEpic.setStatus(Status.NEW);
+        newEpic.setId(id);
         epic.put(id, newEpic);
 
 
@@ -98,6 +90,7 @@ class Manager {
     public boolean createSubTask(Subtask subtask) { // Создаем задачу типа SubTask
         id++;
         subtask.setStatus(Status.NEW);
+        subtask.setId(id);
         subtasks.put(id, subtask);
             return true;
     }
