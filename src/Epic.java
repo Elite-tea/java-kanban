@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    protected ArrayList<Integer> idSubtasks; // Списк id сподзадач пренадлежащих эпику.
+    protected ArrayList<Integer> idSubtasks; // Список id подзадач принадлежащих эпику.
 
     public Epic(String name, String detail, ArrayList<Integer> idSubtasks, int id) {
         super(name, detail,id);

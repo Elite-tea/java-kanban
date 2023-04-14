@@ -9,7 +9,7 @@ public class Subtask extends Task {
    @Override
    public String toString() {
       return "{Name " + name + "}\n{Details " + detail + "}\n{Status " + status + "}\n{IdEpicTasks " + idEpic + "}\n";
-      /* Вывод 2-ой и следующих задач начинается с запитой, что для ПО по нашей логике
+      /* Вывод 2-ой и следующих задач начинается с запятой, что по нашей логике для программы
        будет восприниматься как разделитель между задачами.*/
    }
 }
