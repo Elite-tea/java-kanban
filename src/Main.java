@@ -7,11 +7,11 @@ public class Main {
     static String details = "Тело Эпик задачи";
     static String newDetails = "Тело Эпик задачи обновлено";
     static String detailz = "Тело Суб задачи";
-    static  String newDetailz = "Тело Суб задачи обновлено";
-    static  String status = "New";
-    static  String newStatus = "Done";
+    static String newDetailz = "Тело Суб задачи обновлено";
+    static String status = "New";
+    static String newStatus = "Done";
     static ArrayList<Integer> idSubtasks = new ArrayList<>();
-    static  ArrayList<Integer> idSubtasks2 = new ArrayList<>();
+    static ArrayList<Integer> idSubtasks2 = new ArrayList<>();
 
     static int idEpic = 2;
 
@@ -20,19 +20,20 @@ public class Main {
 
     static Task task = new Task(name, detail, taskManager.id);
     static Task newTask = new Task(name, detailNew, taskManager.id);
-    static Epic epics = new Epic(name, details,idSubtasks, taskManager.id);
+    static Epic epics = new Epic(name, details, idSubtasks, taskManager.id);
     static Epic newEpic = new Epic(name, newDetails, idSubtasks, taskManager.id);
     static Epic epics2 = new Epic(name, details, idSubtasks2, taskManager.id);
-    static Subtask subtask = new Subtask(name, detailz,idEpic, taskManager.id);
+    static Subtask subtask = new Subtask(name, detailz, idEpic, taskManager.id);
     static Subtask newSubtask = new Subtask(name, newDetailz, idEpic, taskManager.id);
 
-    public static void dataTest(){
+    public static void dataTest() {
 
     }
+
     public static void main(String[] args) {
         Managers.getDefault();
         Managers.getDefaultHistory();
-    //TODO Тут будет эмуляция обмена данных с условным сервером. Сугубо тесты
+        //TODO Тут будет эмуляция обмена данных с условным сервером. Сугубо тесты
         dataTest();
 
 //         Т Е С Т Ы ! ! !

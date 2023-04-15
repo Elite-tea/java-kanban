@@ -2,17 +2,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 class InMemoryTaskManager implements TaskManager {
-    protected  int id = 0; // счетчик задач всего.
+    protected int id = 0; // счетчик задач всего.
 
-    protected  HashMap<Integer, Task> tasks = new HashMap<>();
+    protected HashMap<Integer, Task> tasks = new HashMap<>();
     protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
     protected HashMap<Integer, Epic> epic = new HashMap<>();
     InMemoryHistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
 
-
-
-    @Override
     public ArrayList getAllTasks(TypeTask type) { // Получение всех задач
         switch (type) {
             case TASK:
@@ -61,24 +58,24 @@ class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getByIdTask(Integer id) { // Получить задачу по идентификатору
-        inMemoryHistoryManager.history(tasks.get(id));
+        inMemoryHistoryManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Subtask getByIdSubTask(Integer id) { // Получить суб задачу по идентификатору
-        inMemoryHistoryManager.history(subtasks.get(id));
+        inMemoryHistoryManager.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
     @Override
     public Epic getByIdEpic(Integer id) { // Получить эпик по идентификатору
-        inMemoryHistoryManager.history(epic.get(id));
+        inMemoryHistoryManager.add(epic.get(id));
         return epic.get(id);
     }
 
     @Override
-    public boolean createTask(Task newTask ) { // Создаем задачу типа Task
+    public boolean createTask(Task newTask) { // Создаем задачу типа Task
         id++; // Теперь хранится последний использованный id а не свободный. Была идея инкрементировать id в параметре,
         // но это плохой тон, как сказал мой наставник
         newTask.setStatus(Status.NEW);
@@ -119,7 +116,7 @@ class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean updateEpic(Integer id, Epic dataEpic) { // Обновление задачи типа Epic по идентификатору
+    public boolean updateEpic(Integer id, Epic dataEpic) { // Обновление задачи типа Tasks. Epic по идентификатору
         if (epic.get(id).id == 0 || epic.get(id) == null) { /* Проверка на существование.
                                                                         Если задачи не существует, вернем false. */
             return false;
@@ -151,19 +148,17 @@ class InMemoryTaskManager implements TaskManager {
                     int done = 0;
                     int progress = 0;
 
-                    if (dataEpic.getStatus().equals(Status.DONE.toString())){
+                    if (dataEpic.getStatus() == Status.DONE) {
                         done++;
                     }
 
-                    if (dataEpic.getStatus().equals(Status.IN_PROGRESS.toString())) {
+                    if (dataEpic.getStatus() == Status.IN_PROGRESS) {
                         progress++;
                     }
 
                     if (done > 0) {
                         epic.get(idEpicSubTasks).setStatus(Status.DONE);
-                    }
-
-                    else if (progress > 0) {
+                    } else if (progress > 0) {
                         epic.get(idEpicSubTasks).setStatus(Status.IN_PROGRESS);
                     }
                 } else {
@@ -175,7 +170,7 @@ class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public  boolean removeTaskId(Integer id, TypeTask type) { // Удаляем по идентификатору
+    public boolean removeTaskId(Integer id, TypeTask type) { // Удаляем по идентификатору
         if (tasks.get(id) == null && epic.get(id) == null && subtasks.get(id) == null) { // Проверяем на существование
             return false;
         } else {
@@ -220,14 +215,15 @@ class InMemoryTaskManager implements TaskManager {
     }
 
 }
-enum Status{
+
+enum Status {
 
     NEW,
     IN_PROGRESS,
     DONE
 }
 
-enum TypeTask{
+enum TypeTask {
 
     TASK,
     EPIC,

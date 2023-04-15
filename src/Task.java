@@ -1,6 +1,6 @@
 public class Task {
     protected String name; // Название, кратко описывающее суть задачи
-    protected int id; // Айди задачи.
+    public int id; // Айди задачи.
     protected String detail; // Описание, в котором раскрываются детали.
     protected Status status; /*Статус, отображающий её прогресс.
     Мы будем выделять следующие этапы жизни задачи(NEW, IN_PROGRESS, DONE)*/
@@ -15,8 +15,9 @@ public class Task {
 
         return status;
     }
+
     public void setId(int newId) {
-    id = newId;
+        id = newId;
     }
 
     public void setStatus(Status newstatus) {
@@ -26,7 +27,8 @@ public class Task {
     @Override
     public String toString() {
 
-        return "{Name " + name + "}\n{Details " + detail + "}\n{Status " + status + "}"; /* Разделитель между задачами
-        является символ "," так по нашей логике ПО понимает, где начинается следующая задача.*/
+        return "{Name " + name + "}" +
+                "\n{Details " + detail + "}" +
+                "\n{Status " + status + "}"; // Переопределение для корректного вывода задач.
     }
 }

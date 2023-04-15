@@ -1,17 +1,21 @@
+import Tasks.TypeTask;
+
 import java.util.ArrayList;
 
 interface TaskManager {
 
-    ArrayList getAllTasks(TypeTask type);
-
     boolean revoteAllTask(TypeTask type);
 
+    ArrayList getAllTasks(TypeTask type);
+
     Task getByIdTask(Integer id);
+
     Subtask getByIdSubTask(Integer id);
+
     Epic getByIdEpic(Integer id);
 
 
-    boolean createTask(Task newTask );
+    boolean createTask(Task newTask);
 
     boolean createEpic(Epic newEpic);
 
@@ -23,8 +27,7 @@ interface TaskManager {
 
     boolean updateSubTask(Integer id, Subtask subtask);
 
-
-     boolean removeTaskId(Integer id, TypeTask type);
+    boolean removeTaskId(Integer id, TypeTask type); // Спасибо за хот_кей! Очень удобно быстро форматировать код
 
     ArrayList<Subtask> getListSubtaskEpic(Integer id);
 
