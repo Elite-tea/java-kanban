@@ -42,7 +42,7 @@ public class Main {
         System.out.println(taskManager.createEpic(newEpic)); //Тест пройден, результат true
         System.out.println(taskManager.createSubTask(subtask)); //Тест пройден, результат true
         System.out.println(taskManager.createSubTask(newSubtask)); //Тест пройден, результат true
-        //System.out.println(taskManager.revoteAllTask(1)); // Проверка на удаление всех задач с типом 1(Task)
+        // System.out.println(taskManager.revoteAllTask(1)); // Проверка на удаление всех задач с типом 1(Task)
         // System.out.println(taskManager.removeTaskId(0,TypeTask.TASK ));// Тест пройден, данные удалены при вызове метода
         System.out.println("--Запрос задачи с идентификатором 1,2,3--");
         System.out.println(taskManager.getByIdTask(1)); // Тест пройден, null потому что удален тип 1 командой выше

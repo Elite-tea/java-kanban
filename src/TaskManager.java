@@ -4,7 +4,7 @@ interface TaskManager {
 
     ArrayList getAllTasks(TypeTask type);
 
-    boolean revoteAllTask(int type);
+    boolean revoteAllTask(TypeTask type);
 
     Task getByIdTask(Integer id);
     Subtask getByIdSubTask(Integer id);

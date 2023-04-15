@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 class InMemoryTaskManager implements TaskManager {
     protected  int id = 0; // счетчик задач всего.
@@ -43,16 +42,16 @@ class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean revoteAllTask(int type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
+    public boolean revoteAllTask(TypeTask type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
         switch (type) {
-            case 1:
+            case TASK:
                 tasks.clear();
                 return true;
-            case 2:
+            case EPIC:
                 epic.clear();
                 subtasks.clear();
                 return true;
-            case 3:
+            case SUBTASK:
                 subtasks.clear();
                 return true;
             default:
@@ -220,5 +219,17 @@ class InMemoryTaskManager implements TaskManager {
         }
     }
 
+}
+enum Status{
 
+    NEW,
+    IN_PROGRESS,
+    DONE
+}
+
+enum TypeTask{
+
+    TASK,
+    EPIC,
+    SUBTASK
 }
