@@ -1,45 +1,47 @@
+package TaskManager;
+
+import HistoryManager.HistoryManager;
+import Tasks.Epic;
+import Tasks.Status;
+import Tasks.Subtask;
+import Tasks.Task;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
-class InMemoryTaskManager implements TaskManager {
-    protected int id = 0; // счетчик задач всего.
+public class InMemoryTaskManager implements TaskManager {
 
-    protected HashMap<Integer, Task> tasks = new HashMap<>();
-    protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    protected HashMap<Integer, Epic> epic = new HashMap<>();
-    InMemoryHistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+    private int id = 0; // счетчик задач всего.
 
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epic = new HashMap<>();
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    public ArrayList getAllTasks(TypeTask type) { // Получение всех задач
+    public Collection getAllTasks(TypeTask type) { // Получение всех задач
         switch (type) {
             case TASK:
-                ArrayList<Task> taskList = new ArrayList<>();
-                for (Integer i : tasks.keySet()) { // Получаем задачи типа task
-                    taskList.add(tasks.get(i));
-
-                }
-                return taskList;
+                return tasks.values();
 
             case EPIC:
-                ArrayList<Epic> epicList = new ArrayList<>();
-                for (Integer i : epic.keySet()) { // Получаем задачи типа epic
-                    epicList.add(epic.get(i));
-                }
-                return epicList;
+                return epic.values();
 
             case SUBTASK:
-                ArrayList<Subtask> subtaskList = new ArrayList<>();
-                for (Integer i : subtasks.keySet()) { // Получаем задачи типа subtask
-                    subtaskList.add(subtasks.get(i));
-                }
-                return subtaskList;
+                return subtasks.values();
             default:
-                return new ArrayList<>();
+                return new HashMap<>().values();
         }
     }
 
     @Override
-    public boolean revoteAllTask(TypeTask type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public boolean remoteAllTask(TypeTask type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
         switch (type) {
             case TASK:
                 tasks.clear();
@@ -58,26 +60,25 @@ class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getByIdTask(Integer id) { // Получить задачу по идентификатору
-        inMemoryHistoryManager.add(tasks.get(id));
+        historyManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Subtask getByIdSubTask(Integer id) { // Получить суб задачу по идентификатору
-        inMemoryHistoryManager.add(subtasks.get(id));
+        historyManager.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
     @Override
     public Epic getByIdEpic(Integer id) { // Получить эпик по идентификатору
-        inMemoryHistoryManager.add(epic.get(id));
+        historyManager.add(epic.get(id));
         return epic.get(id);
     }
 
     @Override
-    public boolean createTask(Task newTask) { // Создаем задачу типа Task
-        id++; // Теперь хранится последний использованный id а не свободный. Была идея инкрементировать id в параметре,
-        // но это плохой тон, как сказал мой наставник
+    public boolean createTask(Task newTask) { // Создаем задачу типа Tasks.Task
+        id++; // Тут хранится последний использованный id
         newTask.setStatus(Status.NEW);
         newTask.setId(id);
         tasks.put(id, newTask);
@@ -85,7 +86,7 @@ class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean createEpic(Epic newEpic) { // Создаем задачу типа Epic
+    public boolean createEpic(Epic newEpic) { // Создаем задачу типа Tasks.Epic
         id++;
         newEpic.setStatus(Status.NEW);
         newEpic.setId(id);
@@ -105,9 +106,8 @@ class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean updateTask(Integer id, Task task) { // Обновление задачи типа Task по id
-        if (tasks.get(id) == null || tasks.get(id).id == 0) { /* Проверка на существование.
-                                                                        Если задачи не существует, вернем false. */
+    public boolean updateTask(Integer id, Task task) { // Обновление задачи типа Tasks.Task по id
+        if (tasks.get(id) == null || tasks.get(id).getId() == 0) { // Проверка на существование. Задачи нет, вернем false.
             return false;
         } else {
             tasks.put(id, task);
@@ -116,9 +116,9 @@ class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean updateEpic(Integer id, Epic dataEpic) { // Обновление задачи типа Tasks. Epic по идентификатору
-        if (epic.get(id).id == 0 || epic.get(id) == null) { /* Проверка на существование.
-                                                                        Если задачи не существует, вернем false. */
+    public boolean updateEpic(Integer id, Epic dataEpic) { // Обновление задачи типа Tasks. Tasks. Epic по идентификатору
+        /* Проверка на существование. Если задачи не существует, вернем false. */
+        if (epic.get(id).getId() == 0 || epic.get(id) == null) {
             return false;
         } else {
             epic.put(id, dataEpic);
@@ -128,8 +128,7 @@ class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean updateSubTask(Integer id, Subtask subtask) { // Обновление задачи типа SubTask по id
-        if (subtasks.get(id) == null || subtasks.get(id).id == 0) { /* Проверка на существование.
-                                                                        Если задачи не существует, вернем false. */
+        if (subtasks.get(id) == null || subtasks.get(id).getId() == 0) {
             return false;
         } else {
             subtasks.put(id, subtask);
@@ -137,10 +136,10 @@ class InMemoryTaskManager implements TaskManager {
             int idEpicSubTasks; // id эпика
 
             Subtask dataEpic = subtasks.get(id);  // Получаем id эпика
-            idEpicSubTasks = dataEpic.idEpic;
+            idEpicSubTasks = dataEpic.getIdEpic();
 
 
-            idTheSubEpic = epic.get(idEpicSubTasks).idSubtasks; // Получаем по id эпика список всех суб задач.
+            idTheSubEpic = epic.get(idEpicSubTasks).getIdSubtasks(); // Получаем по id эпика список всех суб задач.
 
             for (Integer integer : idTheSubEpic) { // Идем по всем суб задачам и проверяем их статус,
 
@@ -179,7 +178,7 @@ class InMemoryTaskManager implements TaskManager {
                     tasks.remove(id);
                 case EPIC:
                     ArrayList<Integer> idSub;
-                    idSub = (epic.get(id).idSubtasks);
+                    idSub = (epic.get(id).getIdSubtasks());
                     for (Integer integer : idSub) {
                         subtasks.remove(integer);
                     }
@@ -199,7 +198,7 @@ class InMemoryTaskManager implements TaskManager {
         if (epic.get(id) == null) {
             return new ArrayList<>(); // Возвращаем пустой лист при ошибке.
         } else {
-            data = dataList.idSubtasks; // Достаем данные id для эпика
+            data = dataList.getIdSubtasks(); // Достаем данные id для эпика
 
             if (data.size() != 0) {
                 ArrayList<Subtask> taskList = new ArrayList<>();
@@ -214,18 +213,9 @@ class InMemoryTaskManager implements TaskManager {
         }
     }
 
-}
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
+    }
 
-enum Status {
-
-    NEW,
-    IN_PROGRESS,
-    DONE
-}
-
-enum TypeTask {
-
-    TASK,
-    EPIC,
-    SUBTASK
 }

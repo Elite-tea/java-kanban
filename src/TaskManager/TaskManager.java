@@ -1,12 +1,18 @@
-import Tasks.TypeTask;
+package TaskManager;
+
+import Tasks.Epic;
+import Tasks.Subtask;
+import Tasks.Task;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-interface TaskManager {
+public interface TaskManager {
 
-    boolean revoteAllTask(TypeTask type);
+    boolean remoteAllTask(TypeTask type);
 
-    ArrayList getAllTasks(TypeTask type);
+    Collection getAllTasks(TypeTask type);
 
     Task getByIdTask(Integer id);
 
@@ -31,4 +37,7 @@ interface TaskManager {
 
     ArrayList<Subtask> getListSubtaskEpic(Integer id);
 
+    List<Task> getHistory();
+
+    int getId(); // Получаем айди :)
 }

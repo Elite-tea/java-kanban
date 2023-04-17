@@ -1,14 +1,19 @@
+package Tasks;
+
 public class Task {
     protected String name; // Название, кратко описывающее суть задачи
-    public int id; // Айди задачи.
+    protected int id; // Айди задачи.
     protected String detail; // Описание, в котором раскрываются детали.
-    protected Status status; /*Статус, отображающий её прогресс.
-    Мы будем выделять следующие этапы жизни задачи(NEW, IN_PROGRESS, DONE)*/
+    protected Status status; //Статус, отображающий её прогресс.(NEW, IN_PROGRESS, DONE)
 
     public Task(String name, String detail, int id) {
         this.name = name;
         this.detail = detail;
         this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Status getStatus() {
@@ -20,8 +25,8 @@ public class Task {
         id = newId;
     }
 
-    public void setStatus(Status newstatus) {
-        status = newstatus;
+    public void setStatus(Status newStatus) {
+        status = newStatus;
     }
 
     @Override

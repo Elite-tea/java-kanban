@@ -1,3 +1,11 @@
+import TaskManager.Managers;
+import TaskManager.TaskManager;
+import TaskManager.TypeTask;
+import Tasks.Epic;
+import Tasks.Status;
+import Tasks.Subtask;
+import Tasks.Task;
+
 import java.util.ArrayList;
 
 public class Main {
@@ -6,26 +14,22 @@ public class Main {
     static String detailNew = "Тело задачи обновлено";
     static String details = "Тело Эпик задачи";
     static String newDetails = "Тело Эпик задачи обновлено";
-    static String detailz = "Тело Суб задачи";
-    static String newDetailz = "Тело Суб задачи обновлено";
-    static String status = "New";
-    static String newStatus = "Done";
+    static String detailZ = "Тело Суб задачи";
+    static String newDetailZ = "Тело Суб задачи обновлено";
     static ArrayList<Integer> idSubtasks = new ArrayList<>();
     static ArrayList<Integer> idSubtasks2 = new ArrayList<>();
 
-    static int idEpic = 2;
+    static int idEpic = 3;
 
-    static InMemoryTaskManager taskManager = Managers.getDefault();
+    static TaskManager taskManager = Managers.getDefault();
 
-
-    static Task task = new Task(name, detail, taskManager.id);
-    static Task newTask = new Task(name, detailNew, taskManager.id);
-    static Epic epics = new Epic(name, details, idSubtasks, taskManager.id);
-    static Epic newEpic = new Epic(name, newDetails, idSubtasks, taskManager.id);
-    static Epic epics2 = new Epic(name, details, idSubtasks2, taskManager.id);
-    static Subtask subtask = new Subtask(name, detailz, idEpic, taskManager.id);
-    static Subtask newSubtask = new Subtask(name, newDetailz, idEpic, taskManager.id);
-
+    static Task task = new Task(name, detail, taskManager.getId());
+    static Task newTask = new Task(name, detailNew, taskManager.getId());
+    static Epic epics = new Epic(name, details, idSubtasks, taskManager.getId());
+    static Epic newEpic = new Epic(name, newDetails, idSubtasks, taskManager.getId());
+    static Epic epics2 = new Epic(name, details, idSubtasks2, taskManager.getId());
+    static Subtask subtask = new Subtask(name, detailZ, idEpic, taskManager.getId());
+    static Subtask newSubtask = new Subtask(name, newDetailZ, idEpic, taskManager.getId());
     public static void dataTest() {
 
     }
@@ -40,41 +44,46 @@ public class Main {
 
         System.out.println(taskManager.createTask(task)); //Тест пройден, результат true
         System.out.println(taskManager.createEpic(epics)); //Тест пройден, результат true
-        System.out.println(taskManager.createEpic(newEpic)); //Тест пройден, результат true
+        System.out.println(taskManager.createEpic(epics2)); //Тест пройден, результат true
         System.out.println(taskManager.createSubTask(subtask)); //Тест пройден, результат true
         System.out.println(taskManager.createSubTask(newSubtask)); //Тест пройден, результат true
-        // System.out.println(taskManager.revoteAllTask(1)); // Проверка на удаление всех задач с типом 1(Task)
-        // System.out.println(taskManager.removeTaskId(0,TypeTask.TASK ));// Тест пройден, данные удалены при вызове метода
-        System.out.println("--Запрос задачи с идентификатором 1,2,3--");
-        System.out.println(taskManager.getByIdTask(1)); // Тест пройден, null потому что удален тип 1 командой выше
-        System.out.println(taskManager.getByIdEpic(2));
+        System.out.println(taskManager.createEpic(newEpic)); //Тест пройден, результат true
+
+        idSubtasks2.add(subtask.getId());
+        idSubtasks2.add(newSubtask.getId());
+
+        newSubtask.setStatus(Status.DONE);
+        System.out.println("--Запрос задачи с идентификатором 1,3,4--");
+        System.out.println(taskManager.getByIdTask(1));
+        System.out.println(taskManager.getByIdEpic(3));
         System.out.println(taskManager.getByIdSubTask(4));
         System.out.println("-----------------------------------------"); // Тест пройден
 
-      /*  System.out.println("-------Отображение задач всех видов------");
-        System.out.println(taskManager.getAllTasks(TypeTask.TASK)); // Отображение всех задач типа 1(Task)
+        System.out.println("-------Отображение задач всех видов------");
+        System.out.println(taskManager.getAllTasks(TypeTask.TASK)); // Отображение всех задач типа 1(Tasks.Task)
         System.out.println("/////////////////////////////////////////");
-        System.out.println(taskManager.getAllTasks(TypeTask.EPIC)); // Отображение всех задач типа 2(Epic)
+        System.out.println(taskManager.getAllTasks(TypeTask.EPIC)); // Отображение всех задач типа 2(Tasks.Epic)
         System.out.println("/////////////////////////////////////////");
         System.out.println(taskManager.getAllTasks(TypeTask.SUBTASK)); // Отображение всех типов задач 3(SubTask)
         System.out.println("-----------------------------------------");// Тест пройден
 
-        System.out.println("-----Смотрим все подзадачи эпика id 2----");
-        System.out.println(taskManager.getListSubtaskEpic(2));
+        System.out.println("-----Смотрим все подзадачи эпика id 3----");
+        System.out.println(taskManager.getListSubtaskEpic(3));
         System.out.println("-----------------------------------------");// Тест пройден
 
-        System.out.println("-----Обновляем Task-----");
-        System.out.println(taskManager.updateTask(0 , newTask));
+        System.out.println("-----Обновляем Tasks.Task-----");
+        newTask.setStatus(Status.DONE);
+        System.out.println(taskManager.updateTask(1 , newTask));
         System.out.println(taskManager.getAllTasks(TypeTask.TASK));
         System.out.println("-----------------------------------------");// Тест пройден
 
-        System.out.println("-----Обновляем Epic-----");
-        System.out.println(taskManager.updateEpic(2 , epics2));
+        System.out.println("-----Обновляем Tasks.Epic-----");
+        System.out.println(taskManager.updateEpic(3 , epics2));
         System.out.println(taskManager.getAllTasks(TypeTask.EPIC));
         System.out.println("-----------------------------------------");// Тест пройден
 
-        System.out.println("-----Обновляем Subtask-----");// Тест пройден
-        System.out.println(taskManager.updateSubTask(3 , newSubtask));
+        System.out.println("-----Обновляем Tasks.Subtask-----");// Тест пройден
+        System.out.println(taskManager.updateSubTask(5 , newSubtask));
         System.out.println(taskManager.getAllTasks(TypeTask.SUBTASK));
         System.out.println("-----------------------------------------");// Тест пройден
 
@@ -82,8 +91,8 @@ public class Main {
         System.out.println(taskManager.getAllTasks(TypeTask.EPIC));
         System.out.println("-----------------------------------------");// Тест пройден
 
-       */
-        System.out.println(taskManager.inMemoryHistoryManager.getHistory()); // Тест пройден, история отображается.
+
+        System.out.println(taskManager.getHistory()); // Тест пройден, история отображается.
 
 
     }
