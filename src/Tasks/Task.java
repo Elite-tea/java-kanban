@@ -17,7 +17,6 @@ public class Task {
     }
 
     public Status getStatus() {
-
         return status;
     }
 
@@ -31,7 +30,6 @@ public class Task {
 
     @Override
     public String toString() {
-
         return "{Name " + name + "}" +
                 "\n{Details " + detail + "}" +
                 "\n{Status " + status + "}"; // Переопределение для корректного вывода задач.
