@@ -130,7 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean checkStatus(Integer id) {
+    public void checkStatus(Integer id) {
         ArrayList<Integer> idTheSubEpic; // Лист с id суб задач эпика.
         int idEpicSubTasks; // id эпика
 
@@ -156,11 +156,8 @@ public class InMemoryTaskManager implements TaskManager {
                 } else if (progress > 0) {
                     epic.get(idEpicSubTasks).setStatus(Status.IN_PROGRESS);
                 }
-            } else {
-                return false;
             }
         }
-        return true;
     }
 
     @Override

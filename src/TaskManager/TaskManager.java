@@ -4,8 +4,6 @@ import Tasks.Epic;
 import Tasks.Subtask;
 import Tasks.Task;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public interface TaskManager {
@@ -37,7 +35,7 @@ public interface TaskManager {
 
     List<Subtask> getListSubtaskEpic(Integer id);
 
-    boolean checkStatus(Integer id);
+    void checkStatus(Integer id);
 
     List<Task> getHistory();
 }
