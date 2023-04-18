@@ -6,18 +6,15 @@ import Tasks.Status;
 import Tasks.Subtask;
 import Tasks.Task;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
     private int id = 0; // счетчик задач всего.
 
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epic = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    private final Map<Integer, Epic> epic = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     public Collection getAllTasks(TypeTask type) { // Получение всех задач
