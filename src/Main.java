@@ -23,13 +23,13 @@ public class Main {
 
     static TaskManager taskManager = Managers.getDefault();
 
-    static Task task = new Task(name, detail, taskManager.getId());
-    static Task newTask = new Task(name, detailNew, taskManager.getId());
-    static Epic epics = new Epic(name, details, idSubtasks, taskManager.getId());
-    static Epic newEpic = new Epic(name, newDetails, idSubtasks, taskManager.getId());
-    static Epic epics2 = new Epic(name, details, idSubtasks2, taskManager.getId());
-    static Subtask subtask = new Subtask(name, detailZ, idEpic, taskManager.getId());
-    static Subtask newSubtask = new Subtask(name, newDetailZ, idEpic, taskManager.getId());
+    static Task task = new Task(name, detail, 1);
+    static Task newTask = new Task(name, detailNew, 1);
+    static Epic epics = new Epic(name, details, idSubtasks, 2);
+    static Epic newEpic = new Epic(name, newDetails, idSubtasks, 6);
+    static Epic epics2 = new Epic(name, details, idSubtasks2, 3);
+    static Subtask subtask = new Subtask(name, detailZ, idEpic, 4);
+    static Subtask newSubtask = new Subtask(name, newDetailZ, idEpic, 5);
     public static void dataTest() {
 
     }

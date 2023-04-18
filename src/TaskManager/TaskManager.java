@@ -12,7 +12,7 @@ public interface TaskManager {
 
     boolean remoteAllTask(TypeTask type);
 
-    Collection getAllTasks(TypeTask type);
+    List<Task> getAllTasks(TypeTask type);
 
     Task getByIdTask(Integer id);
 
@@ -35,9 +35,9 @@ public interface TaskManager {
 
     boolean removeTaskId(Integer id, TypeTask type); // Спасибо за хот_кей! Очень удобно быстро форматировать код
 
-    ArrayList<Subtask> getListSubtaskEpic(Integer id);
+    List<Subtask> getListSubtaskEpic(Integer id);
+
+    boolean checkStatus(Integer id);
 
     List<Task> getHistory();
-
-    int getId(); // Получаем айди :)
 }

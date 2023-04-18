@@ -17,25 +17,21 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Epic> epic = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    public Collection getAllTasks(TypeTask type) { // Получение всех задач
+    public List<Task> getAllTasks(TypeTask type) { // Получение всех задач
         switch (type) {
             case TASK:
-                return tasks.values();
+                return new ArrayList<>(tasks.values());
 
             case EPIC:
-                return epic.values();
+                return new ArrayList<>(epic.values());
 
             case SUBTASK:
-                return subtasks.values();
+                return new ArrayList<>(subtasks.values());
             default:
-                return new HashMap<>().values();
+                return new ArrayList<>();
         }
     }
 
-    @Override
-    public int getId() {
-        return id;
-    }
 
     @Override
     public boolean remoteAllTask(TypeTask type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
@@ -57,8 +53,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getByIdTask(Integer id) { // Получить задачу по идентификатору
-        historyManager.add(tasks.get(id));
-        return tasks.get(id);
+        Task task = tasks.get(id);
+        historyManager.add(task);
+        return task;
     }
 
     @Override
@@ -88,8 +85,6 @@ public class InMemoryTaskManager implements TaskManager {
         newEpic.setStatus(Status.NEW);
         newEpic.setId(id);
         epic.put(id, newEpic);
-
-
         return true;
     }
 
@@ -129,40 +124,43 @@ public class InMemoryTaskManager implements TaskManager {
             return false;
         } else {
             subtasks.put(id, subtask);
-            ArrayList<Integer> idTheSubEpic; // Лист с id суб задач эпика.
-            int idEpicSubTasks; // id эпика
-
-            Subtask dataEpic = subtasks.get(id);  // Получаем id эпика
-            idEpicSubTasks = dataEpic.getIdEpic();
-
-
-            idTheSubEpic = epic.get(idEpicSubTasks).getIdSubtasks(); // Получаем по id эпика список всех суб задач.
-
-            for (Integer integer : idTheSubEpic) { // Идем по всем суб задачам и проверяем их статус,
-
-                if (subtasks.get(integer) != null) {
-                    int done = 0;
-                    int progress = 0;
-
-                    if (dataEpic.getStatus() == Status.DONE) {
-                        done++;
-                    }
-
-                    if (dataEpic.getStatus() == Status.IN_PROGRESS) {
-                        progress++;
-                    }
-
-                    if (done > 0) {
-                        epic.get(idEpicSubTasks).setStatus(Status.DONE);
-                    } else if (progress > 0) {
-                        epic.get(idEpicSubTasks).setStatus(Status.IN_PROGRESS);
-                    }
-                } else {
-                    return false;
-                }
-            }
+            checkStatus(id);
             return true;
         }
+    }
+
+    @Override
+    public boolean checkStatus(Integer id) {
+        ArrayList<Integer> idTheSubEpic; // Лист с id суб задач эпика.
+        int idEpicSubTasks; // id эпика
+
+        Subtask dataEpic = subtasks.get(id);  // Получаем id эпика
+        idEpicSubTasks = dataEpic.getIdEpic();
+        idTheSubEpic = epic.get(idEpicSubTasks).getIdSubtasks(); // Получаем по id эпика список всех суб задач.
+        for (Integer integer : idTheSubEpic) { // Идем по всем суб задачам и проверяем их статус,
+
+            if (subtasks.get(integer) != null) {
+                int done = 0;
+                int progress = 0;
+
+                if (dataEpic.getStatus() == Status.DONE) {
+                    done++;
+                }
+
+                if (dataEpic.getStatus() == Status.IN_PROGRESS) {
+                    progress++;
+                }
+
+                if (done > 0) {
+                    epic.get(idEpicSubTasks).setStatus(Status.DONE);
+                } else if (progress > 0) {
+                    epic.get(idEpicSubTasks).setStatus(Status.IN_PROGRESS);
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -182,6 +180,7 @@ public class InMemoryTaskManager implements TaskManager {
                     epic.remove(id);
                 case SUBTASK:
                     subtasks.remove(id);
+                    checkStatus(id);
                 default:
                     return false;
             }
@@ -189,7 +188,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Subtask> getListSubtaskEpic(Integer id) { // Получение списка всех подзадач определённого эпика.
+    public List<Subtask> getListSubtaskEpic(Integer id) { // Получение списка всех подзадач определённого эпика.
         Epic dataList = epic.get(id); // Лист для хранения данных конкретного эпика
         ArrayList<Integer> data; // Лист для хранения списка id суб задач конкретного эпика.
         if (epic.get(id) == null) {
