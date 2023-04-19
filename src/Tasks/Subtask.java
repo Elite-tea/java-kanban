@@ -1,7 +1,6 @@
 package Tasks;
 
 public class Subtask extends Task {
-
     private final int idEpic; // Id главной задачи, возможно пригодится для реализации проверки принадлежности к главному эпику.
 
     public Subtask(String name, String detail, int idEpic, int id) {

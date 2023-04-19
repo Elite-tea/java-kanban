@@ -35,7 +35,5 @@ public interface TaskManager {
 
     List<Subtask> getListSubtaskEpic(Integer id);
 
-    void checkStatus(Integer id);
-
     List<Task> getHistory();
 }

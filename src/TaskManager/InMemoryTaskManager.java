@@ -9,14 +9,13 @@ import Tasks.Task;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-
     private int id = 0; // счетчик задач всего.
-
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
     private final Map<Integer, Epic> epic = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
+    @Override
     public List<Task> getAllTasks(TypeTask type) { // Получение всех задач
         switch (type) {
             case TASK:
@@ -31,7 +30,6 @@ public class InMemoryTaskManager implements TaskManager {
                 return new ArrayList<>();
         }
     }
-
 
     @Override
     public boolean remoteAllTask(TypeTask type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
@@ -129,8 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    @Override
-    public void checkStatus(Integer id) {
+    private void checkStatus(Integer id) {
         ArrayList<Integer> idTheSubEpic; // Лист с id суб задач эпика.
         int idEpicSubTasks; // id эпика
 
@@ -202,7 +199,6 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 return new ArrayList<>(); // Возвращаем пустой лист при ошибке.
             }
-
         }
     }
 
@@ -210,5 +206,4 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
-
 }
