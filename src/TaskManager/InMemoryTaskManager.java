@@ -127,36 +127,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void checkStatus(Integer id) {
-        ArrayList<Integer> idTheSubEpic; // Лист с id суб задач эпика.
-        int idEpicSubTasks; // id эпика
-
-        Subtask dataEpic = subtasks.get(id);  // Получаем id эпика
-        idEpicSubTasks = dataEpic.getIdEpic();
-        idTheSubEpic = epic.get(idEpicSubTasks).getIdSubtasks(); // Получаем по id эпика список всех суб задач.
-        for (Integer integer : idTheSubEpic) { // Идем по всем суб задачам и проверяем их статус,
-
-            if (subtasks.get(integer) != null) {
-                int done = 0;
-                int progress = 0;
-
-                if (dataEpic.getStatus() == Status.DONE) {
-                    done++;
-                }
-
-                if (dataEpic.getStatus() == Status.IN_PROGRESS) {
-                    progress++;
-                }
-
-                if (done > 0) {
-                    epic.get(idEpicSubTasks).setStatus(Status.DONE);
-                } else if (progress > 0) {
-                    epic.get(idEpicSubTasks).setStatus(Status.IN_PROGRESS);
-                }
-            }
-        }
-    }
-
     @Override
     public boolean removeTaskId(Integer id, TypeTask type) { // Удаляем по идентификатору
         if (tasks.get(id) == null && epic.get(id) == null && subtasks.get(id) == null) { // Проверяем на существование
@@ -205,5 +175,35 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    private void checkStatus(Integer id) {
+        ArrayList<Integer> idTheSubEpic; // Лист с id суб задач эпика.
+        int idEpicSubTasks; // id эпика
+
+        Subtask dataEpic = subtasks.get(id);  // Получаем id эпика
+        idEpicSubTasks = dataEpic.getIdEpic();
+        idTheSubEpic = epic.get(idEpicSubTasks).getIdSubtasks(); // Получаем по id эпика список всех суб задач.
+        for (Integer integer : idTheSubEpic) { // Идем по всем суб задачам и проверяем их статус,
+
+            if (subtasks.get(integer) != null) {
+                int done = 0;
+                int progress = 0;
+
+                if (dataEpic.getStatus() == Status.DONE) {
+                    done++;
+                }
+
+                if (dataEpic.getStatus() == Status.IN_PROGRESS) {
+                    progress++;
+                }
+
+                if (done > 0) {
+                    epic.get(idEpicSubTasks).setStatus(Status.DONE);
+                } else if (progress > 0) {
+                    epic.get(idEpicSubTasks).setStatus(Status.IN_PROGRESS);
+                }
+            }
+        }
     }
 }
