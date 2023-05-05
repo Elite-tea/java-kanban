@@ -33,6 +33,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean remoteAllTask(TypeTask type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
+        historyManager.allRemove();
         switch (type) {
             case TASK:
                 tasks.clear();
@@ -51,9 +52,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getByIdTask(Integer id) { // Получить задачу по идентификатору
-        Task task = tasks.get(id);
-        historyManager.add(task);
-        return task;
+        historyManager.add(tasks.get(id));
+        return tasks.get(id);
     }
 
     @Override
@@ -132,6 +132,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.get(id) == null && epic.get(id) == null && subtasks.get(id) == null) { // Проверяем на существование
             return false;
         } else {
+            historyManager.remove(id);
             switch (type) {
                 case TASK:
                     tasks.remove(id);

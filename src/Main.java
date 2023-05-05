@@ -9,13 +9,6 @@ import Tasks.Task;
 import java.util.ArrayList;
 
 public class Main {
-    static String name = "Задача";
-    static String detail = "Тело задачи";
-    static String detailNew = "Тело задачи обновлено";
-    static String details = "Тело Эпик задачи";
-    static String newDetails = "Тело Эпик задачи обновлено";
-    static String detailZ = "Тело Суб задачи";
-    static String newDetailZ = "Тело Суб задачи обновлено";
     static ArrayList<Integer> idSubtasks = new ArrayList<>();
     static ArrayList<Integer> idSubtasks2 = new ArrayList<>();
 
@@ -23,13 +16,13 @@ public class Main {
 
     static TaskManager taskManager = Managers.getDefault();
 
-    static Task task = new Task(name, detail, 1);
-    static Task newTask = new Task(name, detailNew, 1);
-    static Epic epics = new Epic(name, details, idSubtasks, 2);
-    static Epic newEpic = new Epic(name, newDetails, idSubtasks, 6);
-    static Epic epics2 = new Epic(name, details, idSubtasks2, 3);
-    static Subtask subtask = new Subtask(name, detailZ, idEpic, 4);
-    static Subtask newSubtask = new Subtask(name, newDetailZ, idEpic, 5);
+    static Task task = new Task("Задача task", "Тело задачи", 1);
+    static Task newTask = new Task("Задача newTask", "Тело задачи обновлено", 1);
+    static Epic epics = new Epic("Задача epics", "Тело Эпик задачи", idSubtasks, 2);
+    static Epic newEpic = new Epic("Задача newEpic", "Тело задачи обновлено", idSubtasks, 6);
+    static Epic epics2 = new Epic("Задача epics2", "Тело Эпик задачи", idSubtasks2, 3);
+    static Subtask subtask = new Subtask("Задача subtask", "Тело Суб задачи", idEpic, 4);
+    static Subtask newSubtask = new Subtask("Задача newSubtask", "Тело Суб задачи обновлено", idEpic, 5);
     public static void dataTest() {
 
     }
@@ -55,8 +48,12 @@ public class Main {
         newSubtask.setStatus(Status.DONE);
         System.out.println("--Запрос задачи с идентификатором 1,3,4--");
         System.out.println(taskManager.getByIdTask(1));
-        System.out.println(taskManager.getByIdEpic(3));
-        System.out.println(taskManager.getByIdSubTask(4));
+        System.out.println(taskManager.getByIdTask(1));
+        System.out.println(taskManager.getByIdTask(1));
+        System.out.println(taskManager.getByIdTask(1));
+        System.out.println(taskManager.getByIdTask(1));
+       // System.out.println(taskManager.getByIdEpic(3));
+       // System.out.println(taskManager.getByIdSubTask(4));
         System.out.println("-----------------------------------------"); // Тест пройден
 
         System.out.println("-------Отображение задач всех видов------");

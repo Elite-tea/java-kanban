@@ -18,7 +18,6 @@ public interface TaskManager {
 
     Epic getByIdEpic(Integer id);
 
-
     boolean createTask(Task newTask);
 
     boolean createEpic(Epic newEpic);
