@@ -48,18 +48,18 @@ public class InMemoryHistoryManager implements HistoryManager {
 
         private void linkLast(Task task) { // Добавляем задачу в конец списка
 
-        Node prevNode = tail;
-        Node node = new Node(tail, task, null);
-        tail = node;
+            Node prevNode = tail;
+            Node node = new Node(tail, task, null);
+            tail = node;
 
-        if (prevNode == null) { //Если предыдущая нода пуска, значит эта будет головой.
-            head = node;
+            if (prevNode == null) { //Если предыдущая нода пуска, значит эта будет головой.
+                head = node;
 
-        } else { //Иначе, эта будет следующей.
-            prevNode.next = node;
-        }
+            } else { //Иначе, эта будет следующей.
+                prevNode.next = node;
+            }
 
-        size++;
+            size++;
         }
 
         public List<Task> getTasks() { // Собираем задачи в лист и возвращаем его.
@@ -75,23 +75,23 @@ public class InMemoryHistoryManager implements HistoryManager {
 
         void removeNode(Node node) {
 
-        Node nextNode = node.next;
-        Node prevNode = node.prev;
+            Node nextNode = node.next;
+            Node prevNode = node.prev;
 
-        if (prevNode == null) { //Проверяем ноду на пустоту, если пусто то головой будет следующая
-            head = nextNode;
-        } else {
-            prevNode.next = nextNode;
-        }
+            if (prevNode == null) { //Проверяем ноду на пустоту, если пусто то головой будет следующая
+                head = nextNode;
+            } else {
+                prevNode.next = nextNode;
+            }
 
-        if (nextNode == null) { //Аналогично для хвоста
-            tail = prevNode;
-        } else {
-            node.next = null;
-        }
+            if (nextNode == null) { //Аналогично для хвоста
+                tail = prevNode;
+            } else {
+                node.next = null;
+            }
 
-        node.data = null;
-        size--;
+            node.data = null;
+            size--;
         }
 
         public void remove(Task task) { //Удаляем задачу из просмотра
