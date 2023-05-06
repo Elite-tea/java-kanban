@@ -41,6 +41,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     static class CustomLinkedList<T> { // В ТЗ очень непонятно, необходима реализация через класс или нет.
+
         private Node head;
         private Node tail;
         private int size = 0;
@@ -57,19 +58,23 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else { //Иначе, эта будет следующей.
             prevNode.next = node;
         }
+
         size++;
         }
 
         public List<Task> getTasks() { // Собираем задачи в лист и возвращаем его.
+
             List<Task> tasks = new ArrayList<>();
 
             for (Node node = head; node != null; node = node.next) { //Пробежимся по нодам
                 tasks.add(node.data);
             }
+
             return tasks;
         }
 
         void removeNode(Node node) {
+
         Node nextNode = node.next;
         Node prevNode = node.prev;
 
@@ -90,6 +95,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         public void remove(Task task) { //Удаляем задачу из просмотра
+
             for (Node node = head; node != null; node = node.next) {
                 if (task.equals(node.data)) {
                     removeNode(node);
@@ -106,6 +112,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         Node prev;
 
         Node(Node prev, Task data, Node next) {
+
             this.data = data;
             this.next = next;
             this.prev = prev;
