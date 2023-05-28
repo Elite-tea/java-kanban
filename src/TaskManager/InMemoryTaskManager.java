@@ -10,10 +10,10 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 0; // счетчик задач всего.
-    private final Map<Integer, Task> tasks = new HashMap<>();
-    private final Map<Integer, Subtask> subtasks = new HashMap<>();
-    private final Map<Integer, Epic> epic = new HashMap<>();
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected static final Map<Integer, Task> tasks = new HashMap<>();
+    protected static final Map<Integer, Subtask> subtasks = new HashMap<>();
+    protected static final Map<Integer, Epic> epic = new HashMap<>();
+    protected static final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public List<Task> getAllTasks(TypeTask type) { // Получение всех задач
@@ -69,7 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean createTask(Task newTask) { // Создаем задачу типа Tasks.Task
+    public boolean createTask(Task newTask) { // Создаем задачу типа Task
         id++; // Тут хранится последний использованный id
         newTask.setStatus(Status.NEW);
         newTask.setId(id);
