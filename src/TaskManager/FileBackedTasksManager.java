@@ -1,18 +1,77 @@
 package TaskManager;
 
+import Exception.ManagerSaveException;
 import Tasks.Epic;
 import Tasks.Status;
 import Tasks.Subtask;
 import Tasks.Task;
-import Exception.ManagerSaveException;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    static File file;
-    String HEAD = "id,type,name,status,description,epic \n";
+    File file;
+
+    private void historyToString(Writer fileWriter) throws IOException {
+
+        for (Task task : getHistory()) {
+            fileWriter.write(task.getId() + ",");
+        }
+    }
+
+    private static void fromString(String value) {
+
+        String[] data = value.split(",");
+
+
+        switch (data[1]) { // Сделал два варианта восстановления таска, оба рабочие, какой более верно использовать?
+            case "TASK": // Первый вариант, восстановления таска через сеттеры.
+
+                Task task = new Task();
+                task.setName(data[2]);
+                task.setId(Integer.parseInt(data[0]));
+                task.setDetail(data[4]);
+                task.setStatus(Status.valueOf(data[3]));
+                tasks.put(task.getId(), task);
+                break;
+
+            case "EPIC": // Второй вариант, указываем параметры при создании. Как будет более корректно?
+
+                Epic epics = new Epic(data[2], data[4], Integer.parseInt(data[0]));
+                epics.setStatus(Status.valueOf(data[3]));
+                epic.put(epics.getId(), epics);
+                break;
+
+            case "SUBTASK": // Так же и это, вариант с указанием параметров при создании таска.
+
+                Subtask subtask = new Subtask(data[2], data[4], Integer.parseInt(data[5]), Integer.parseInt(data[0]));
+                subtask.setStatus(Status.valueOf(data[3]));
+                subtasks.put(subtask.getId(), subtask);
+                Epic epicId = epic.get(Integer.parseInt(data[5]));
+                epicId.setIdSubtasks(subtask.getId());
+                epic.put(epicId.getId(), epicId);
+                break;
+
+            default:
+
+                if (!data[0].equals("id")) {
+                    for (String id : data) {
+                        Task taskHistory;
+                        if (tasks.containsKey(Integer.parseInt(id))) {
+                            taskHistory = tasks.get(Integer.parseInt(id));
+                        }
+                        else if (subtasks.containsKey(Integer.parseInt(id))) {
+                            taskHistory = subtasks.get(Integer.parseInt(id));
+                        }
+                        else {
+                            taskHistory = epic.get(Integer.parseInt(id));
+                        }
+                        historyManager.add(taskHistory);
+                    }
+                }
+
+        }
+
+    }
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -23,6 +82,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         try {
             Writer fileWriter = new FileWriter(file);
 
+            final String HEAD = "id,type,name,status,description,epic \n";
             fileWriter.write(HEAD);
 
             if (!super.getAllTasks(TypeTask.TASK).isEmpty()) {
@@ -61,87 +121,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             fileWriter.close();
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException(e.getMessage());
         }
     }
 
-    void historyToString(Writer fileWriter) throws IOException {
-
-        for (Task task : getHistory()) {
-            fileWriter.write(task.getId() + ",");
-        }
-    }
-
-    private static void fromString(String value) {
-
-        String[] data = value.split(",");
-
-
-        switch (data[1]) { // Сделал два варианта восстановления таска, оба рабочие, какой более верно использовать?
-            case "TASK":
-
-                Task task = new Task();
-                task.setName(data[2]);
-                task.setId(Integer.parseInt(data[0]));
-                task.setDetail(data[4]);
-                task.setStatus(Status.valueOf(data[3]));
-                tasks.put(task.getId(), task);
-                break;
-
-            case "EPIC":
-
-                Epic epics = new Epic(data[2], data[4], Integer.parseInt(data[0]));
-                epics.setStatus(Status.valueOf(data[3]));
-                epic.put(epics.getId(), epics);
-                break;
-
-            case "SUBTASK":
-
-                Subtask subtask = new Subtask(data[2], data[4], Integer.parseInt(data[5]), Integer.parseInt(data[0]));
-                subtask.setStatus(Status.valueOf(data[3]));
-                subtasks.put(subtask.getId(), subtask);
-                Epic epicId = epic.get(Integer.parseInt(data[5]));
-                epicId.setIdSubtasks(subtask.getId());
-                epic.put(epicId.getId(), epicId);
-                break;
-
-            default:
-
-                if (!data[0].equals("id")) {
-                    for (String id : data) {
-                            Task taskHistory;
-                            if (tasks.containsKey(Integer.parseInt(id))) {
-                                taskHistory = tasks.get(Integer.parseInt(id));
-                            }
-                            else if (subtasks.containsKey(Integer.parseInt(id))) {
-                                taskHistory = subtasks.get(Integer.parseInt(id));
-                            }
-                            else {
-                                taskHistory = epic.get(Integer.parseInt(id));
-                            }
-                        historyManager.add(taskHistory);
-                    }
-                }
-
-        }
-
-    }
-
-    private static List<Integer> historyFromString(String value) {
-
-        List<Integer> historyList = new ArrayList<>();
-
-        if (value != null) {
-            String[] idHistory = value.split(",");
-
-            for (String id : idHistory) {
-                historyList.add(Integer.parseInt(id));
-            }
-        }
-        return historyList;
-    }
-
-    public static void loadFromFile() {
+    public FileBackedTasksManager loadFromFile() { // Загружаем файл, обрабатываем построчно.
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
 
@@ -159,16 +143,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
 
         } catch (IOException e) {
-            throw new ManagerSaveException("Error read data file");
+            throw new ManagerSaveException(e.getMessage());
         }
+        return new FileBackedTasksManager(file);
     }
 
+    /* Переопределяем методы для сохранения тасков в файл */
     @Override
-    public boolean remoteAllTask(TypeTask type) {
+    public boolean removeAllTask(TypeTask type) {
 
         save();
 
-        return super.remoteAllTask(type);
+        return super.removeAllTask(type);
     }
 
     @Override
@@ -250,4 +236,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
         return super.getByIdTask(id);
     }
+
 }

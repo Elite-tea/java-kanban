@@ -11,7 +11,7 @@ public class Main {
     static int idEpic = 3;
 
     static TaskManager taskManager = Managers.getDefault();
-    static FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/base.csv"));
+
     //static FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile((new File("src/resources/base.csv")));
 
 
@@ -22,16 +22,15 @@ public class Main {
     static Epic epics2 = new Epic("Задача epics2", "Тело Эпик задачи", idSubtasks2, 3);
     static Subtask subtask = new Subtask("Задача subtask", "Тело Суб задачи", idEpic, 4);
     static Subtask newSubtask = new Subtask("Задача newSubtask", "Тело Суб задачи обновлено", idEpic, 5);
-    public static void dataTest() {
-
-    }
 
     public static void main(String[] args) {
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/base.csv"));
         Managers.getDefault();
         Managers.getDefaultHistory();
+        fileBackedTasksManager.loadFromFile(); // Не совсем понял что требовалось сделать с методом, но все работает.
         //TODO Тут будет эмуляция обмена данных с условным сервером. Сугубо тесты
         //dataTest();
-        FileBackedTasksManager.loadFromFile();
+
 //         Т Е С Т Ы ! ! !
 
 //        System.out.println(fileBackedTasksManager.createTask(task)); //Тест пройден, результат true
@@ -88,6 +87,7 @@ public class Main {
         System.out.println("-----------------------------------------");// Тест пройден
 //
 //
+
         System.out.println(fileBackedTasksManager.getHistory()); // Тест пройден, история отображается.
 
 

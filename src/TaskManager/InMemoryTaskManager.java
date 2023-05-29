@@ -32,7 +32,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean remoteAllTask(TypeTask type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
+    public boolean removeAllTask(TypeTask type) { // Удалить все задачи. Если нет данных = null, не найден тип = false
         historyManager.allRemove();
         switch (type) {
             case TASK:

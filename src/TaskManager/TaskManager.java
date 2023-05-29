@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TaskManager {
 
-    boolean remoteAllTask(TypeTask type);
+    boolean removeAllTask(TypeTask type);
 
     List<Task> getAllTasks(TypeTask type);
 
