@@ -27,7 +27,8 @@ public class Main {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/base.csv"));
         Managers.getDefault();
         Managers.getDefaultHistory();
-        fileBackedTasksManager.loadFromFile(); // Не совсем понял что требовалось сделать с методом, но все работает.
+        // Не совсем понял что требовалось сделать с методом, но все работает.
+        FileBackedTasksManager fileBackedTasksManager2 = fileBackedTasksManager.loadFromFile();
         //TODO Тут будет эмуляция обмена данных с условным сервером. Сугубо тесты
         //dataTest();
 
@@ -55,11 +56,11 @@ public class Main {
 //        System.out.println("-----------------------------------------"); // Тест пройден
 //
 //        System.out.println("-------Отображение задач всех видов------");
-        System.out.println(fileBackedTasksManager.getAllTasks(TypeTask.TASK)); // Отображение всех задач типа 1(Tasks.Task)
+        System.out.println(fileBackedTasksManager2.getAllTasks(TypeTask.TASK)); // Отображение всех задач типа 1(Tasks.Task)
 //        System.out.println("/////////////////////////////////////////");
-        System.out.println(fileBackedTasksManager.getAllTasks(TypeTask.EPIC)); // Отображение всех задач типа 2(Tasks.Epic)
+        System.out.println(fileBackedTasksManager2.getAllTasks(TypeTask.EPIC)); // Отображение всех задач типа 2(Tasks.Epic)
 //        System.out.println("/////////////////////////////////////////");
-      System.out.println(fileBackedTasksManager.getAllTasks(TypeTask.SUBTASK)); // Отображение всех типов задач 3(SubTask)
+      System.out.println(fileBackedTasksManager2.getAllTasks(TypeTask.SUBTASK)); // Отображение всех типов задач 3(SubTask)
 //        System.out.println("-----------------------------------------");// Тест пройден
 //
 //        System.out.println("-----Смотрим все подзадачи эпика id 3----");
@@ -88,7 +89,7 @@ public class Main {
 //
 //
 
-        System.out.println(fileBackedTasksManager.getHistory()); // Тест пройден, история отображается.
+        System.out.println(fileBackedTasksManager2.getHistory()); // Тест пройден, история отображается.
 
 
 
