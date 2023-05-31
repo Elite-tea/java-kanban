@@ -141,10 +141,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             throw new ManagerSaveException(e.getMessage());
         }
     }
+
     /**
      * {@inheritDoc}
      * Переопределяем методы для сохранения тасков в файл
      */
+
     @Override
     public boolean removeAllTask(TypeTask type) {
 
