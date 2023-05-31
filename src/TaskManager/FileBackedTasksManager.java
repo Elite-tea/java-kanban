@@ -9,16 +9,44 @@ import Tasks.Task;
 import java.io.*;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    File file;
+    private final File file;
+    private final String HEAD = "id,type,name,status,description,epic \n"; // Переносил переменную по предложению IDEA)
 
-    private void historyToString(Writer fileWriter) throws IOException {
+    public FileBackedTasksManager(File file) {
+        this.file = file;
+    }
+
+    public FileBackedTasksManager loadFromFile() { // Загружаем файл, обрабатываем построчно.
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+
+            String line;
+
+            while (bufferedReader.ready()) {
+                line = bufferedReader.readLine();
+
+                if (line.isEmpty()) {
+                    continue;
+                }
+
+                fromString(line);
+
+            }
+
+        } catch (IOException e) {
+            throw new ManagerSaveException(e.getMessage());
+        }
+        return new FileBackedTasksManager(file);
+    }
+
+    private void historyToString(Writer fileWriter) throws IOException { //
 
         for (Task task : getHistory()) {
             fileWriter.write(task.getId() + ",");
         }
     }
 
-    private static void fromString(String value) {
+    private void fromString(String value) {
 
         String[] data = value.split(",");
 
@@ -73,16 +101,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
-    public FileBackedTasksManager(File file) {
-        this.file = file;
-    }
-
-    public void save() {
+    private void save() {
 
         try {
             Writer fileWriter = new FileWriter(file);
 
-            final String HEAD = "id,type,name,status,description,epic \n";
             fileWriter.write(HEAD);
 
             if (!super.getAllTasks(TypeTask.TASK).isEmpty()) {
@@ -91,8 +114,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     fileWriter.write(task.toString());
                 }
 
-            } else {
-                fileWriter.write("");
             }
 
             if (!super.getAllTasks(TypeTask.EPIC).isEmpty()) {
@@ -101,8 +122,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     fileWriter.write(task.toString());
                 }
 
-            } else {
-                fileWriter.write("");
             }
 
             if (!super.getAllTasks(TypeTask.SUBTASK).isEmpty()) {
@@ -111,8 +130,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     fileWriter.write(task.toString());
                 }
 
-            } else {
-                fileWriter.write("");
             }
 
             fileWriter.write("\n");
@@ -124,31 +141,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             throw new ManagerSaveException(e.getMessage());
         }
     }
-
-    public FileBackedTasksManager loadFromFile() { // Загружаем файл, обрабатываем построчно.
-
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-
-            String line;
-
-            while (bufferedReader.ready()) {
-                line = bufferedReader.readLine();
-
-                if (line.isEmpty()) {
-                    continue;
-                }
-
-                fromString(line);
-
-            }
-
-        } catch (IOException e) {
-            throw new ManagerSaveException(e.getMessage());
-        }
-        return new FileBackedTasksManager(file);
-    }
-
-    /* Переопределяем методы для сохранения тасков в файл */
+    /**
+     * {@inheritDoc}
+     * Переопределяем методы для сохранения тасков в файл
+     */
     @Override
     public boolean removeAllTask(TypeTask type) {
 
