@@ -12,6 +12,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private final File file;
     private final String HEAD = "id,type,name,status,description,epic \n"; // Переносил переменную по предложению IDEA)
 
+    public FileBackedTasksManager(File file) {
+        this.file = file;
+    }
+
     /**
      * {@inheritDoc}
      * Переопределяем методы для сохранения тасков в файл
@@ -103,10 +107,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             save();
         }
         return super.getByIdTask(id);
-    }
-
-    public FileBackedTasksManager(File file) {
-        this.file = file;
     }
 
     public FileBackedTasksManager loadFromFile() { // Загружаем файл, обрабатываем построчно.
