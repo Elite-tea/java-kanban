@@ -12,6 +12,99 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private final File file;
     private final String HEAD = "id,type,name,status,description,epic \n"; // Переносил переменную по предложению IDEA)
 
+    /**
+     * {@inheritDoc}
+     * Переопределяем методы для сохранения тасков в файл
+     */
+
+    @Override
+    public boolean removeAllTask(TypeTask type) {
+
+        save();
+
+        return super.removeAllTask(type);
+    }
+
+    @Override
+    public boolean createTask(Task newTask) {
+
+        save();
+
+        return super.createTask(newTask);
+    }
+
+    @Override
+    public boolean createEpic(Epic newEpic) {
+
+        save();
+
+        return super.createEpic(newEpic);
+    }
+
+    @Override
+    public boolean createSubTask(Subtask subtask) {
+
+        save();
+
+        return super.createSubTask(subtask);
+    }
+
+    @Override
+    public boolean updateTask(Integer id, Task task) {
+
+        save();
+
+        return super.updateTask(id, task);
+    }
+
+    @Override
+    public boolean updateEpic(Integer id, Epic dataEpic) {
+
+        save();
+
+        return super.updateEpic(id, dataEpic);
+    }
+
+    @Override
+    public boolean updateSubTask(Integer id, Subtask subtask) {
+
+        save();
+
+        return super.updateSubTask(id, subtask);
+    }
+
+    @Override
+    public boolean removeTaskId(Integer id, TypeTask type) {
+
+        save();
+
+        return super.removeTaskId(id, type);
+    }
+
+    @Override
+    public Epic getByIdEpic(Integer id) {
+        if (super.getByIdEpic(id) != null) {
+            save();
+        }
+        return super.getByIdEpic(id);
+    }
+
+    @Override
+    public Subtask getByIdSubTask(Integer id) {
+        if (super.getByIdSubTask(id) != null) {
+            save();
+        }
+        return super.getByIdSubTask(id);
+    }
+
+    @Override
+    public Task getByIdTask(Integer id) {
+        if (super.getByIdTask(id) != null) {
+            save();
+        }
+        return super.getByIdTask(id);
+    }
+
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
@@ -140,99 +233,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } catch (IOException e) {
             throw new ManagerSaveException(e.getMessage());
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     * Переопределяем методы для сохранения тасков в файл
-     */
-
-    @Override
-    public boolean removeAllTask(TypeTask type) {
-
-        save();
-
-        return super.removeAllTask(type);
-    }
-
-    @Override
-    public boolean createTask(Task newTask) {
-
-        save();
-
-        return super.createTask(newTask);
-    }
-
-    @Override
-    public boolean createEpic(Epic newEpic) {
-
-        save();
-
-        return super.createEpic(newEpic);
-    }
-
-    @Override
-    public boolean createSubTask(Subtask subtask) {
-
-        save();
-
-        return super.createSubTask(subtask);
-    }
-
-    @Override
-    public boolean updateTask(Integer id, Task task) {
-
-        save();
-
-        return super.updateTask(id, task);
-    }
-
-    @Override
-    public boolean updateEpic(Integer id, Epic dataEpic) {
-
-        save();
-
-        return super.updateEpic(id, dataEpic);
-    }
-
-    @Override
-    public boolean updateSubTask(Integer id, Subtask subtask) {
-
-        save();
-
-        return super.updateSubTask(id, subtask);
-    }
-
-    @Override
-    public boolean removeTaskId(Integer id, TypeTask type) {
-
-        save();
-
-        return super.removeTaskId(id, type);
-    }
-
-    @Override
-    public Epic getByIdEpic(Integer id) {
-        if (super.getByIdEpic(id) != null) {
-            save();
-        }
-        return super.getByIdEpic(id);
-    }
-
-    @Override
-    public Subtask getByIdSubTask(Integer id) {
-        if (super.getByIdSubTask(id) != null) {
-            save();
-        }
-        return super.getByIdSubTask(id);
-    }
-
-    @Override
-    public Task getByIdTask(Integer id) {
-        if (super.getByIdTask(id) != null) {
-            save();
-        }
-        return super.getByIdTask(id);
     }
 
 }
