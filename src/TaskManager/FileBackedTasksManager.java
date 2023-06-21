@@ -7,10 +7,14 @@ import Tasks.Subtask;
 import Tasks.Task;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final File file;
-    private final String HEAD = "id,type,name,status,description,epic \n"; // Переносил переменную по предложению IDEA)
+    private final String HEAD = "id,type,name,status,description,epic\n"; // Переносил переменную по предложению IDEA)
+    private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -147,28 +151,31 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         switch (data[1]) { // Сделал два варианта восстановления таска, оба рабочие, какой более верно использовать?
             case "TASK": // Первый вариант, восстановления таска через сеттеры.
 
-                Task task = new Task();
-                task.setName(data[2]);
-                task.setId(Integer.parseInt(data[0]));
-                task.setDetail(data[4]);
+                Task task = new Task(data[2], data[4], Integer.parseInt(data[0]), Integer.parseInt(data[7]),
+                        LocalDateTime.parse(data[5], FORMATTER));
                 task.setStatus(Status.valueOf(data[3]));
                 tasks.put(task.getId(), task);
                 break;
 
             case "EPIC": // Второй вариант, указываем параметры при создании. Как будет более корректно?
-
-                Epic epics = new Epic(data[2], data[4], Integer.parseInt(data[0]));
+                ArrayList<Integer> idSubTask = new ArrayList<>();
+                Epic epics = new Epic(data[2], data[4], idSubTask, Integer.parseInt(data[0]),
+                        LocalDateTime.parse(data[5], FORMATTER), Integer.parseInt(data[7]));
                 epics.setStatus(Status.valueOf(data[3]));
                 epic.put(epics.getId(), epics);
+                findTimeOfEpic(epics);
                 break;
 
             case "SUBTASK": // Так же и это, вариант с указанием параметров при создании таска.
 
-                Subtask subtask = new Subtask(data[2], data[4], Integer.parseInt(data[5]), Integer.parseInt(data[0]));
+                Subtask subtask = new Subtask(data[2], data[4], Integer.parseInt(data[5]), Integer.parseInt(data[0]),
+                        LocalDateTime.parse(data[5], FORMATTER), 0);
                 subtask.setStatus(Status.valueOf(data[3]));
                 subtasks.put(subtask.getId(), subtask);
                 Epic epicId = epic.get(Integer.parseInt(data[5]));
                 epicId.setIdSubtasks(subtask.getId());
+
+                findTimeOfEpic(epicId);
                 epic.put(epicId.getId(), epicId);
                 break;
 
@@ -194,7 +201,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
-    private void save() {
+    public void save() {
 
         try {
             Writer fileWriter = new FileWriter(file);

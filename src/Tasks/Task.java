@@ -2,18 +2,58 @@ package Tasks;
 
 import TaskManager.TypeTask;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+
 public class Task {
     protected String name; // Название, кратко описывающее суть задачи
     protected Integer id; // Айди задачи.
     protected String detail; // Описание, в котором раскрываются детали.
-    protected Status status; //Статус, отображающий её прогресс.(NEW, IN_PROGRESS, DONE)
-    protected TypeTask type; //Тип задачи
+    protected Status status = Status.NEW; // Статус, отображающий её прогресс.(NEW, IN_PROGRESS, DONE)
+    protected TypeTask type; // Тип задачи
+    protected int duration; // Продолжительность задачи, оценка того, сколько времени она займёт в минутах (число);
+    protected LocalDateTime startTime; // Дата, когда предполагается приступить к выполнению задачи.
 
-    public Task(String name, String detail, int id) {
+    protected final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
+    public Task(String name, String detail, int id, int duration, LocalDateTime startTime) {
         this.name = name;
         this.detail = detail;
         this.id = id;
         this.type = TypeTask.TASK;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() { // Время завершения задачи
+        try {
+            return this.startTime.plus(Duration.ofMinutes(this.duration));
+        } catch (NullPointerException e) {
+            System.out.print("NullPointerException");
+            return null;
+        }
+    }
+
+    public DateTimeFormatter getFormatter() {
+        return FORMATTER;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public Task() {
@@ -58,8 +98,8 @@ public class Task {
 
     @Override
     public String toString() { // Переопределение для корректной записи в файл.
-        return getId() + "," + getType() + "," + getName() + ","
-                + getStatus() + "," +  getDetail() + ",\n";
+        return getId() + "," + getType() + "," + getName() + "," + getStatus() + "," + getDetail() + "," +
+                startTime.format(FORMATTER) + "," + this.getEndTime().format(FORMATTER) + "," + duration + ",\n";
     }
 
     @Override
@@ -74,7 +114,9 @@ public class Task {
 
         Task task = (Task) o;
 
-        return id.equals(task.id);
+        return Objects.equals(name, task.name) && Objects.equals(id, task.id) && Objects.equals(detail, task.detail) &&
+                status == task.status && Objects.equals(duration, task.duration) &&
+                Objects.equals(startTime, task.startTime);
     }
 
     @Override

@@ -2,11 +2,14 @@ package Tasks;
 
 import TaskManager.TypeTask;
 
-public class Subtask extends Task {
-    private final int idEpic; // Id главной задачи, возможно пригодится для реализации проверки принадлежности к главному эпику.
+import java.time.LocalDateTime;
 
-    public Subtask(String name, String detail, int idEpic, int id) {
-        super(name, detail, id);
+public class Subtask extends Task {
+    // Id главной задачи, возможно пригодится для реализации проверки принадлежности к главному эпику.
+    private final int idEpic;
+
+    public Subtask(String name, String detail, int idEpic, int id, LocalDateTime startTime, int duration) {
+        super(name, detail, id, duration,  startTime);
         this.idEpic = idEpic;
         this.type = TypeTask.SUBTASK;
     }
@@ -22,6 +25,8 @@ public class Subtask extends Task {
     @Override
     public String toString() { // Переопределение для корректной записи в файл.
         return getId() + "," + getType() + "," + getName() + ","
-                + getStatus() + "," +  getDetail() + "," + getIdEpic() + "\n";
+                + getStatus() + "," +  getDetail() + "," + getIdEpic() + getStartTime().format(getFormatter()) + "," +
+                this.getEndTime().format(getFormatter()) + ","
+                + getDuration() + "," + idEpic + "\n";
     }
 }
