@@ -91,26 +91,29 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public Epic getByIdEpic(Integer id) {
-        if (super.getByIdEpic(id) != null) {
+        Epic result = super.getByIdEpic(id);
+        if (result != null) {
             save();
         }
-        return super.getByIdEpic(id);
+        return result;
     }
 
     @Override
     public Subtask getByIdSubTask(Integer id) {
-        if (super.getByIdSubTask(id) != null) {
+        Subtask result = super.getByIdSubTask(id);
+        if (result != null) {
             save();
         }
-        return super.getByIdSubTask(id);
+        return result;
     }
 
     @Override
     public Task getByIdTask(Integer id) {
-        if (super.getByIdTask(id) != null) {
+        Task result = super.getByIdTask(id);
+        if (result != null) {
             save();
         }
-        return super.getByIdTask(id);
+        return result;
     }
 
     public FileBackedTasksManager loadFromFile() { // Загружаем файл, обрабатываем построчно.
