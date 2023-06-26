@@ -12,4 +12,8 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
+    public static TaskManager getDefault(String url) {
+        return new HttpTaskManager(getDefaultHistory(), url);
+    }
+
 }

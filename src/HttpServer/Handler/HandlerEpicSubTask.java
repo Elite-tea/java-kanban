@@ -1,0 +1,42 @@
+package HttpServer.Handler;
+
+import TaskManager.TaskManager;
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
+
+public class HandlerEpicSubTask extends DefaultHandler {
+
+    public HandlerEpicSubTask(TaskManager taskManager) {
+        super(taskManager);
+    }
+
+    @Override
+    public void handle(HttpExchange httpExchange) throws IOException {
+        int statusCode = 400;
+        String method = httpExchange.getRequestMethod();
+        String path = String.valueOf(httpExchange.getRequestURI());
+
+        System.out.println("Обработка запроса" + path + " с методом " + method);
+
+        if (method.equals("GET")) {
+            String query = httpExchange.getRequestURI().getQuery();
+            try {
+                int id = Integer.parseInt(query.substring(query.indexOf("id=") + 3));
+                statusCode = 200;
+                response = gson.toJson(taskManager.getByIdSubTask(id));
+            } catch (StringIndexOutOfBoundsException | NullPointerException e) {
+                response = "В запросе нет параметра id";
+            } catch (NumberFormatException e) {
+                response = "Не верный id";
+            }
+        } else {
+            statusCode = 405;
+            response = "Некорректный запрос";
+        }
+
+        httpExchange.getResponseHeaders().set("Content-Type", "text/plain; charset=");
+        httpExchange.sendResponseHeaders(statusCode, 0);
+        writers(httpExchange);
+    }
+}

@@ -5,6 +5,7 @@ import Tasks.Epic;
 import Tasks.Status;
 import Tasks.Subtask;
 import Tasks.Task;
+import HistoryManager.*;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -12,12 +13,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private final File file;
+    private File file;
     private final String HEAD = "id,type,name,status,description,epic\n"; // Переносил переменную по предложению IDEA)
     private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public FileBackedTasksManager(File file) {
         this.file = file;
+    }
+
+    public FileBackedTasksManager(HistoryManager historyManager) {
+        super(historyManager);
     }
 
     /**

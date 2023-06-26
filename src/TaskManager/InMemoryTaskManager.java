@@ -2,7 +2,10 @@ package TaskManager;
 
 import Exception.ValidationException;
 import HistoryManager.HistoryManager;
-import Tasks.*;
+import Tasks.Epic;
+import Tasks.Status;
+import Tasks.Subtask;
+import Tasks.Task;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -12,9 +15,17 @@ public class InMemoryTaskManager implements TaskManager {
     protected static final Map<Integer, Task> tasks = new HashMap<>();
     protected static final Map<Integer, Subtask> subtasks = new HashMap<>();
     protected static final Map<Integer, Epic> epic = new HashMap<>();
-    protected static final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected static  HistoryManager historyManager;
     protected final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,
             Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Task::getId));
+
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
+    }
+
+    public InMemoryTaskManager() {
+        this.historyManager = Managers.getDefaultHistory();
+    }
 
     @Override
     public List<Task> getAllTasks(TypeTask type) { // Получение всех задач
@@ -71,21 +82,25 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean createTask(Task newTask) { // Создаем задачу типа Task
-        id++; // Тут хранится последний использованный id
+        if (newTask.getId() == 0) {
+            id++; // Тут хранится последний использованный id
+            newTask.setId(id);
+        }
         newTask.setStatus(Status.NEW);
-        newTask.setId(id);
         validation(newTask);
-        tasks.put(id, newTask);
+        tasks.put(newTask.getId(), newTask);
         prioritizedTasks.add(newTask);
         return true;
     }
 
     @Override
     public boolean createEpic(Epic newEpic) { // Создаем задачу типа Tasks.Epic
-        id++;
+        if (newEpic.getId() == 0) {
+            id++;
+            newEpic.setId(id);
+        }
         newEpic.setStatus(Status.NEW);
-        newEpic.setId(id);
-        epic.put(id, newEpic);
+        epic.put(newEpic.getId(), newEpic);
         findTimeOfEpic(newEpic);
         return true;
     }
@@ -93,12 +108,15 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public boolean createSubTask(Subtask subtask) { // Создаем задачу типа SubTask
         validation(subtask);
-        id++;
-        subtask.setStatus(Status.NEW);
-        subtask.setId(id);
-        subtasks.put(id, subtask);
-        findTimeOfEpic(epic.get(subtask.getIdEpic()));
-        prioritizedTasks.add(subtask);
+        if (subtask.getId() == 0) {
+            id++;
+            subtask.setId(id);
+        } else {
+            subtask.setStatus(Status.NEW);
+            subtasks.put(subtask.getId(), subtask);
+            findTimeOfEpic(epic.get(subtask.getIdEpic()));
+            prioritizedTasks.add(subtask);
+        }
         return true;
     }
 
@@ -246,8 +264,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void setPrioritizedTasks(Task task) {
-            prioritizedTasks.add(task);
-        }
+        prioritizedTasks.add(task);
+    }
 
     public Set<Task> getPrioritizedTasks() {
         return prioritizedTasks;

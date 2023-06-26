@@ -19,6 +19,14 @@ public class Epic extends Task {
         this.endTime = getEndTime();
     }
 
+    public Epic(String name, String detail, int id, LocalDateTime startTime, int duration) {
+        super(name, detail, id, duration, startTime);
+        this.idSubtasks = new ArrayList<>();
+        this.type = TypeTask.EPIC;
+        this.setStartTime(getStartTime());
+        this.endTime = getEndTime();
+    }
+
     public Epic(String name, String detail,int id) {
 
         super(name, detail, id, 0,  LocalDateTime.of(2023, 6,17,0,0));
